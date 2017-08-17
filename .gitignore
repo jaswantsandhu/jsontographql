@@ -1,0 +1,10 @@
+/node_modules
+npm-debug.log
+
+# IntelliJ
+*.iml
+/.idea
+/.tmp
+/.DS_Store
+.DS_Store
+/errorShots
