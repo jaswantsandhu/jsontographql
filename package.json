@@ -14,7 +14,7 @@
     "GraphQL",
     "JSON"
   ],
-  "author": "Jaswant Singh Sandhu",
+  "author": "Jaswant Singh Sandhu <jaswant.sandhu88@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jaswantsandhu/json-to-graphql-schema/issues"
