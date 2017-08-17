@@ -34,9 +34,8 @@ createRootSchema = function () {}
 
 handleArray = function (jArray, name) {
     let fields = [];
-
     fields.push(handleDataType(jArray[0], name));
-
+    
     return `${name} = new GraphQLList({
         name: '${name}',
         fields: {
@@ -90,22 +89,28 @@ handleDataType = function (item, name, parent) {
             var ListItemType = typeof item[0];
 
             if (_.isArray(item[0])) {
+
                 ListItemType = `${name}`;
                 schemaVariables.push(`${name}`);
-                schemas[`${name}`] = handleArray(item[0], `${name}`);
+                schemas[name] = handleArray(item[0], `${name}`);
+
             } else if (_.isObject(item[0])) {
+
                 ListItemType = `${name}`;
                 schemaVariables.push(`${name}`);
-                schemas[`${name}`] = handleObject(item[0], `${name}`);
+                schemas[name] = handleObject(item[0], `${name}`);
+
             } else if (_.isInteger(item[0])) {
+
                 ListItemType = "GraphQLInt";
                 schemaVariables.push(`${name}`);
+
             } else if (_.isNumber(item[0])) {
+
                 ListItemType = "GraphQLFloat";
                 schemaVariables.push(`${name}`);
-            }
 
-            console.log(ListItemType, item[0], "ItemType");
+            }
 
             return `${name}: {
                         description: 'enter description for ${name}',
