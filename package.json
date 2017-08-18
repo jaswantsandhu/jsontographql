@@ -1,5 +1,5 @@
 {
-  "name": "json-to-graphql-schema",
+  "name": "jsontographql",
   "version": "0.0.1",
   "description": "Converts JSON to GraphQL Schema.",
   "main": "index.js",
