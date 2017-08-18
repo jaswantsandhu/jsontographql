@@ -3,7 +3,25 @@ const {GraphQLSchema, GraphQLNonNull, GraphQLObjectType, GraphQLList, GraphQLStr
 let Root,
     Events,
     Tickets,
-    seats
+    seats,
+    address
+
+address = new GraphQLObjectType({
+    name: 'address',
+    fields: {
+        line1: {
+            description: 'enter description for line1',
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        line2: {
+            description: 'enter description for line2',
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    },
+    resolve: function (parent, args, context) {
+        // resolve handler.
+    }
+});
 
 Tickets = new GraphQLObjectType({
     name: 'Tickets',
@@ -15,6 +33,10 @@ Tickets = new GraphQLObjectType({
         seats: {
             description: 'enter description for seats',
             type: new GraphQLNonNull(new GraphQLList(GraphQLInt))
+        },
+        address: {
+            description: 'enter description for address',
+            type: new GraphQLNonNull(address)
         }
     },
     resolve: function (parent, args, context) {
