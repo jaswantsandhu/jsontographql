@@ -1,10 +1,18 @@
-const {GraphQLSchema, GraphQLNonNull, GraphQLObjectType, GraphQLList, GraphQLString} = require('graphql');
+const {
+    GraphQLSchema,
+    GraphQLNonNull,
+    GraphQLObjectType,
+    GraphQLList,
+    GraphQLString,
+    GraphQLInt
+} = require('graphql');
 
 let Root,
     Events,
     Tickets,
     seats,
-    address
+    address,
+    Users
 
 address = new GraphQLObjectType({
     name: 'address',
@@ -57,6 +65,23 @@ Events = new GraphQLObjectType({
     }
 });
 
+Users = new GraphQLObjectType({
+    name: 'Users',
+    fields: {
+        name: {
+            description: 'enter description for name',
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        id: {
+            description: 'enter description for id',
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: function (parent, args, context) {
+        // resolve handler.
+    }
+});
+
 module.exports = new GraphQLSchema({
     query: new GraphQLObjectType({
         name: 'Root',
@@ -64,10 +89,16 @@ module.exports = new GraphQLSchema({
             Events: {
                 description: 'enter description for Events',
                 type: new GraphQLNonNull(new GraphQLList(Events))
+            },
+            Users: {
+                description: 'enter description for Users',
+                type: new GraphQLNonNull(new GraphQLList(Users))
+            },
+            Tickets: {
+                description: 'enter description for Tickets',
+                type: new GraphQLNonNull(new GraphQLList(string))
             }
-        },
-        resolve: function (parent, args, context) {
-            // resolve handler.
         }
+
     })
 })

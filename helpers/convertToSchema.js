@@ -35,7 +35,7 @@ createRootSchema = function () {}
 handleArray = function (jArray, name) {
     let fields = [];
     fields.push(handleDataType(jArray[0], name));
-    
+
     return `${name} = new GraphQLList({
         name: '${name}',
         fields: {
@@ -87,6 +87,10 @@ handleDataType = function (item, name, parent) {
             graphQLSchemaImports["array"] = "GraphQLList";
 
             var ListItemType = typeof item[0];
+
+            if (ListItemType === "undefined") {
+                return "";
+            }
 
             if (_.isArray(item[0])) {
 
@@ -161,16 +165,24 @@ handleObject = function (jObject, name, parent, useParent) {
         itemName = `${name}${parent}`;
     }
 
-    return `GraphQLObjectType({
+    var resolve = ""
+
+    if (name !== "Root") {
+        resolve = `,resolve : function(parent, args, context)
+                {
+                    // resolve handler.
+                }`
+    }
+
+    var output = `GraphQLObjectType({
         name: '${itemName}',
         fields: {
             ${fields.join(",")}
-        },
-        resolve : function(parent, args, context)
-            {
-                // resolve handler.
-            }
+        }
+        ${resolve}
     })`
+
+    return output;
 }
 
 convertToSchema = function (JSON, options) {
