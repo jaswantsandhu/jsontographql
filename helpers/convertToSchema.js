@@ -118,7 +118,11 @@ handleDataType = function (item, name, parent) {
 
             return `${name}: {
                         description: 'enter description for ${name}',
-                        type: new GraphQLNonNull(new GraphQLList(${ListItemType}))
+                        type: new GraphQLNonNull(new GraphQLList(${ListItemType})),
+                        resolve : function()
+                            {
+                                // resolve handler.
+                            }
                     }`
             break;
 
@@ -155,6 +159,7 @@ handleDataType = function (item, name, parent) {
 
 handleObject = function (jObject, name, parent, useParent) {
     let fields = [];
+
     _.forEach(jObject, (item, index) => {
         fields.push(handleDataType(item, index, name));
     })
@@ -166,20 +171,12 @@ handleObject = function (jObject, name, parent, useParent) {
     }
 
     var resolve = ""
-
-    if (name !== "Root") {
-        resolve = `,resolve : function(parent, args, context)
-                {
-                    // resolve handler.
-                }`
-    }
-
+    
     var output = `GraphQLObjectType({
         name: '${itemName}',
         fields: {
             ${fields.join(",")}
         }
-        ${resolve}
     })`
 
     return output;

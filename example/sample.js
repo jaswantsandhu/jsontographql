@@ -25,9 +25,6 @@ address = new GraphQLObjectType({
             description: 'enter description for line2',
             type: new GraphQLNonNull(GraphQLString)
         }
-    },
-    resolve: function (parent, args, context) {
-        // resolve handler.
     }
 });
 
@@ -40,15 +37,15 @@ Tickets = new GraphQLObjectType({
         },
         seats: {
             description: 'enter description for seats',
-            type: new GraphQLNonNull(new GraphQLList(GraphQLInt))
+            type: new GraphQLNonNull(new GraphQLList(GraphQLInt)),
+            resolve: function () {
+                // resolve handler.
+            }
         },
         address: {
             description: 'enter description for address',
             type: new GraphQLNonNull(address)
         }
-    },
-    resolve: function (parent, args, context) {
-        // resolve handler.
     }
 });
 
@@ -59,9 +56,6 @@ Events = new GraphQLObjectType({
             description: 'enter description for Tickets',
             type: new GraphQLNonNull(Tickets)
         }
-    },
-    resolve: function (parent, args, context) {
-        // resolve handler.
     }
 });
 
@@ -76,9 +70,6 @@ Users = new GraphQLObjectType({
             description: 'enter description for id',
             type: new GraphQLNonNull(GraphQLInt)
         }
-    },
-    resolve: function (parent, args, context) {
-        // resolve handler.
     }
 });
 
@@ -88,17 +79,25 @@ module.exports = new GraphQLSchema({
         fields: {
             Events: {
                 description: 'enter description for Events',
-                type: new GraphQLNonNull(new GraphQLList(Events))
+                type: new GraphQLNonNull(new GraphQLList(Events)),
+                resolve: function () {
+                    // resolve handler.
+                }
             },
             Users: {
                 description: 'enter description for Users',
-                type: new GraphQLNonNull(new GraphQLList(Users))
+                type: new GraphQLNonNull(new GraphQLList(Users)),
+                resolve: function () {
+                    // resolve handler.
+                }
             },
             Tickets: {
                 description: 'enter description for Tickets',
-                type: new GraphQLNonNull(new GraphQLList(string))
+                type: new GraphQLNonNull(new GraphQLList(string)),
+                resolve: function () {
+                    // resolve handler.
+                }
             }
         }
-
     })
 })
