@@ -6,6 +6,8 @@ Support schema format in ES6, TS and Node.
 
 Now you configure resolves in schema lists.
 
+Checkout the example code on Github - https://github.com/jaswantsandhu/json-to-graphql-schema.
+
 ## Installation 
 
 `npm install jsontographql`

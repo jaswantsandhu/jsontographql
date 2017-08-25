@@ -1,6 +1,10 @@
 const {convertToSchema} = require("../index");
 const fs = require("fs");
 const schemaJSON = {
+    Event: {
+        id: 1,
+        name: "Some Slide"
+    },
     Events: [
         {
             id: 1,
@@ -28,7 +32,13 @@ const schemaJSON = {
 const output = convertToSchema(schemaJSON, {
     jsMode: "TS",
     resolves: {
-        Purls: {
+        Events: {
+            resolve: `invoke({FunctionName : "getEvents"})`,
+            package: "./lambda",
+            method: "invoke",
+            default: false
+        },
+        Event: {
             resolve: `invoke({FunctionName : "getEvent"})`,
             package: "./lambda",
             method: "invoke",

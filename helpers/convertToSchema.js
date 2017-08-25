@@ -26,11 +26,11 @@ let addSchemaImport,
 addResolveMethod = function (name) {
     let resolve = "";
     if (RESOLVES[name]) {
-        resolve = `resolve : function(context, event, args){
+        resolve = `resolve : function(obj, args, context){
             return ${RESOLVES[name].resolve}
         }`
     } else {
-        resolve = `resolve : function()
+        resolve = `resolve : function(obj, args, context)
                 {
                     // resolve handler.
                 }`
@@ -136,22 +136,23 @@ handleDataType = function (item, name, parent) {
     switch (itemType) {
 
         case "object":
-            graphQLSchemaImports["object"] = "GraphQLObjectType2";
+            graphQLSchemaImports["object"] = "GraphQLObjectType";
 
             var itemName = changeCase.pascalCase(name),
                 useParent = false;
 
-            if (schemas[`${name}`]) {
+            if (schemas[changeCase.pascalCase(name)]) {
                 itemName = `${changeCase.pascalCase(name)}${parent}`;
                 useParent = true;
             }
 
             schemaVariables.push(itemName);
-            schemas[itemName] = handleObject(item, name, parent, useParent);
+            schemas[changeCase.pascalCase(itemName)] = handleObject(item, name, parent, useParent);
 
             return `${name}: {
                         description: 'enter description for ${name}',
-                        type: new GraphQLNonNull(${itemName})
+                        type: new GraphQLNonNull(${itemName}),
+                        ${addResolveMethod(name)}
                     }`
             break;
 
@@ -168,13 +169,13 @@ handleDataType = function (item, name, parent) {
 
                 ListItemType = `${name}`;
                 schemaVariables.push(`${changeCase.pascalCase(name)}`);
-                schemas[name] = handleArray(item[0], `${name}`);
+                schemas[changeCase.pascalCase(name)] = handleArray(item[0], `${name}`);
 
             } else if (_.isObject(item[0])) {
 
                 ListItemType = `${name}`;
                 schemaVariables.push(`${changeCase.pascalCase(name)}`);
-                schemas[name] = handleObject(item[0], `${name}`);
+                schemas[changeCase.pascalCase(name)] = handleObject(item[0], `${name}`);
 
             } else if (_.isInteger(item[0])) {
 
@@ -272,16 +273,13 @@ convertToSchema = function (JSON, options = {}) {
     _.forEach(schemas, function (item, index) {
 
         if (index === "Root") {
-
             if (JSMODE === "TS" || JSMODE === "ES6") {
                 schemasOutput += `const Schema = new GraphQLSchema({
                         query: new ${item}
                     })
-                    
                     export {
                         Schema
                     };
-
                     `;
             } else {
                 schemasOutput += `module.exports = new GraphQLSchema({
