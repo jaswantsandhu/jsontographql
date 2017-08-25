@@ -1,71 +1,21 @@
-const {
+import {
     GraphQLSchema,
     GraphQLNonNull,
-    GraphQLObjectType,
+    GraphQLObjectType2,
     GraphQLList,
-    GraphQLString,
-    GraphQLInt
-} = require('graphql');
+    GraphQLInt,
+    GraphQLString
+} from 'graphql';
 
 let Root,
     Events,
-    Tickets,
-    seats,
-    address,
-    Users
+    Event,
+    Templates,
+    Event;
 
-address = new GraphQLObjectType({
-    name: 'address',
+Event = new GraphQLObjectType1({
+    name: 'Event',
     fields: {
-        line1: {
-            description: 'enter description for line1',
-            type: new GraphQLNonNull(GraphQLString)
-        },
-        line2: {
-            description: 'enter description for line2',
-            type: new GraphQLNonNull(GraphQLString)
-        }
-    }
-});
-
-Tickets = new GraphQLObjectType({
-    name: 'Tickets',
-    fields: {
-        name: {
-            description: 'enter description for name',
-            type: new GraphQLNonNull(GraphQLString)
-        },
-        seats: {
-            description: 'enter description for seats',
-            type: new GraphQLNonNull(new GraphQLList(GraphQLInt)),
-            resolve: function () {
-                // resolve handler.
-            }
-        },
-        address: {
-            description: 'enter description for address',
-            type: new GraphQLNonNull(address)
-        }
-    }
-});
-
-Events = new GraphQLObjectType({
-    name: 'Events',
-    fields: {
-        Tickets: {
-            description: 'enter description for Tickets',
-            type: new GraphQLNonNull(Tickets)
-        }
-    }
-});
-
-Users = new GraphQLObjectType({
-    name: 'Users',
-    fields: {
-        name: {
-            description: 'enter description for name',
-            type: new GraphQLNonNull(GraphQLString)
-        },
         id: {
             description: 'enter description for id',
             type: new GraphQLNonNull(GraphQLInt)
@@ -73,8 +23,50 @@ Users = new GraphQLObjectType({
     }
 });
 
-module.exports = new GraphQLSchema({
-    query: new GraphQLObjectType({
+Events = new GraphQLObjectType1({
+    name: 'Events',
+    fields: {
+        id: {
+            description: 'enter description for id',
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        name: {
+            description: 'enter description for name',
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        event: {
+            description: 'enter description for event',
+            type: new GraphQLNonNull(new GraphQLList(Event)),
+            resolve: function () {
+                // resolve handler.
+            }
+        }
+    }
+});
+
+Templates = new GraphQLObjectType1({
+    name: 'Templates',
+    fields: {
+        id: {
+            description: 'enter description for id',
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        name: {
+            description: 'enter description for name',
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        event: {
+            description: 'enter description for event',
+            type: new GraphQLNonNull(new GraphQLList(Event)),
+            resolve: function () {
+                // resolve handler.
+            }
+        }
+    }
+});
+
+const Schema = new GraphQLSchema({
+    query: new GraphQLObjectType1({
         name: 'Root',
         fields: {
             Events: {
@@ -84,16 +76,9 @@ module.exports = new GraphQLSchema({
                     // resolve handler.
                 }
             },
-            Users: {
-                description: 'enter description for Users',
-                type: new GraphQLNonNull(new GraphQLList(Users)),
-                resolve: function () {
-                    // resolve handler.
-                }
-            },
-            Tickets: {
-                description: 'enter description for Tickets',
-                type: new GraphQLNonNull(new GraphQLList(string)),
+            Templates: {
+                description: 'enter description for Templates',
+                type: new GraphQLNonNull(new GraphQLList(Templates)),
                 resolve: function () {
                     // resolve handler.
                 }
@@ -101,3 +86,5 @@ module.exports = new GraphQLSchema({
         }
     })
 })
+
+export {Schema};

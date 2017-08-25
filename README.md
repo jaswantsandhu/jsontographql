@@ -2,6 +2,10 @@
 
 jsontographql helps in converting json to graphql schema in most cases. In the final output some tweeks may be required.
 
+Support schema format in ES6, TS and Node.
+
+Now you configure resolves in schema lists.
+
 ## Installation 
 
 `npm install jsontographql`

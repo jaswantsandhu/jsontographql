@@ -1,33 +1,40 @@
 const {convertToSchema} = require("../index");
 const fs = require("fs");
-const output = convertToSchema({
+const schemaJSON = {
     Events: [
         {
-            Tickets: {
-                name: "Ticket 1",
-                seats: [
-                    23,
-                    324,
-                    34,
-                    312,
-                    312,
-                    3213,
-                    312
-                ],
-                address: {
-                    line1: "",
-                    line2: ""
+            id: 1,
+            name: "VIP Event",
+            event: [
+                {
+                    id: 1,
+                    name: "Some Slide"
                 }
-            }
+            ]
         }
     ],
-    Users: [
+    Templates: [
         {
-            name: "ABC",
-            id: 1
+            id: 1,
+            name: "Template 1",
+            event: [
+                {
+                    id: 1
+                }
+            ]
         }
-    ],
-    Tickets: ["1"]
+    ]
+}
+const output = convertToSchema(schemaJSON, {
+    jsMode: "TS",
+    resolves: {
+        Purls: {
+            resolve: `invoke({FunctionName : "getEvent"})`,
+            package: "./lambda",
+            method: "invoke",
+            default: false
+        }
+    }
 });
 
 fs.writeFile("./sample.js", output, function () {

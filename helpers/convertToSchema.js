@@ -1,4 +1,8 @@
 const _ = require("lodash");
+const changeCase = require("change-case");
+
+let JSMODE = "";
+let RESOLVES = {};
 
 let schemaVariables = [],
     schemas = {},
@@ -14,18 +18,88 @@ let addSchemaImport,
     handleString,
     handleArray,
     handleObject,
-    convertToSchema
+    convertToSchema,
+    addResolveMethod,
+    resolvePackagesImports,
+    resolvePackages = {};
+
+addResolveMethod = function (name) {
+    let resolve = "";
+    if (RESOLVES[name]) {
+        resolve = `resolve : function(context, event, args){
+            return ${RESOLVES[name].resolve}
+        }`
+    } else {
+        resolve = `resolve : function()
+                {
+                    // resolve handler.
+                }`
+    }
+
+    if (RESOLVES[name] && RESOLVES[name].package) {
+        if (!resolvePackages[RESOLVES[name].package]) {
+            resolvePackages[RESOLVES[name].package] = {};
+        }
+        resolvePackages[RESOLVES[name].package][RESOLVES[name].method] = RESOLVES[name].default || false;
+    }
+
+    return resolve;
+}
+
+resolvePackagesImports = function () {
+
+    let items = "",
+        requiredItems = "";
+
+    _.forEach(resolvePackages, function (item, index) {
+
+        var methods = [];
+
+        _.forEach(item, function (method, methodIndex) {
+            methods.push(methodIndex);
+        })
+
+        if (JSMODE === "TS" || JSMODE === "ES6") {
+
+            requiredItems += `
+                import 
+                    {
+                        ${methods.join(", ")}
+                    } 
+                from '${index}';`
+
+        } else {
+            requiredItems += `
+                const {
+                    ${methods.join(", ")}
+                } = require('${index}');`;
+        }
+
+    });
+
+    return requiredItems;
+}
 
 requiredSchemaImports = function () {
-    let items = "";
+
+    let items = "",
+        requiredItems;
+
     _.forEach(graphQLSchemaImports, function (item, index) {
         items += item + ", "
     });
 
-    let requiredItems = `
-        const {
-            ${items}
-        } = require('graphql');`;
+    if (JSMODE === "TS" || JSMODE === "ES6") {
+        requiredItems = `
+                import {
+                    ${items}
+                } from 'graphql';`
+    } else {
+        requiredItems = `
+                const {
+                    ${items}
+                } = require('graphql');`;
+    }
 
     return requiredItems;
 }
@@ -41,10 +115,7 @@ handleArray = function (jArray, name) {
         fields: {
             ${fields.join(",")}
         },
-        resolve : function(parent, args, context)
-            {
-                // resolve handler.
-            }
+        ${addResolveMethod(name)}
     });`
 }
 
@@ -65,12 +136,13 @@ handleDataType = function (item, name, parent) {
     switch (itemType) {
 
         case "object":
-            graphQLSchemaImports["object"] = "GraphQLObjectType";
+            graphQLSchemaImports["object"] = "GraphQLObjectType2";
 
-            var itemName = `${name}`,
+            var itemName = changeCase.pascalCase(name),
                 useParent = false;
+
             if (schemas[`${name}`]) {
-                itemName = `${name}${parent}`;
+                itemName = `${changeCase.pascalCase(name)}${parent}`;
                 useParent = true;
             }
 
@@ -95,34 +167,36 @@ handleDataType = function (item, name, parent) {
             if (_.isArray(item[0])) {
 
                 ListItemType = `${name}`;
-                schemaVariables.push(`${name}`);
+                schemaVariables.push(`${changeCase.pascalCase(name)}`);
                 schemas[name] = handleArray(item[0], `${name}`);
 
             } else if (_.isObject(item[0])) {
 
                 ListItemType = `${name}`;
-                schemaVariables.push(`${name}`);
+                schemaVariables.push(`${changeCase.pascalCase(name)}`);
                 schemas[name] = handleObject(item[0], `${name}`);
 
             } else if (_.isInteger(item[0])) {
 
                 ListItemType = "GraphQLInt";
-                schemaVariables.push(`${name}`);
+                schemaVariables.push(`${changeCase.pascalCase(name)}`);
 
             } else if (_.isNumber(item[0])) {
 
                 ListItemType = "GraphQLFloat";
-                schemaVariables.push(`${name}`);
+                schemaVariables.push(`${changeCase.pascalCase(name)}`);
+
+            } else if (typeof item[0] === "string") {
+
+                ListItemType = "GraphQLString";
+                schemaVariables.push(`${changeCase.pascalCase(name)}`);
 
             }
 
             return `${name}: {
                         description: 'enter description for ${name}',
-                        type: new GraphQLNonNull(new GraphQLList(${ListItemType})),
-                        resolve : function()
-                            {
-                                // resolve handler.
-                            }
+                        type: new GraphQLNonNull(new GraphQLList(${changeCase.pascalCase(ListItemType)})),
+                        ${addResolveMethod(name)}
                     }`
             break;
 
@@ -164,15 +238,15 @@ handleObject = function (jObject, name, parent, useParent) {
         fields.push(handleDataType(item, index, name));
     })
 
-    var itemName = `${name}`
+    var itemName = `${changeCase.pascalCase(name)}`
 
     if (useParent) {
-        itemName = `${name}${parent}`;
+        itemName = `${changeCase.pascalCase(name)}${parent}`;
     }
 
     var resolve = ""
-    
-    var output = `GraphQLObjectType({
+
+    var output = `GraphQLObjectType1({
         name: '${itemName}',
         fields: {
             ${fields.join(",")}
@@ -182,7 +256,10 @@ handleObject = function (jObject, name, parent, useParent) {
     return output;
 }
 
-convertToSchema = function (JSON, options) {
+convertToSchema = function (JSON, options = {}) {
+
+    JSMODE = options.jsMode || "";
+    RESOLVES = options.resolves || {};
 
     if (JSON) {
         handleDataType(JSON, "Root")
@@ -195,24 +272,40 @@ convertToSchema = function (JSON, options) {
     _.forEach(schemas, function (item, index) {
 
         if (index === "Root") {
-            schemasOutput += `module.exports = new GraphQLSchema({
-                    query: new ${item}
-                })`
+
+            if (JSMODE === "TS" || JSMODE === "ES6") {
+                schemasOutput += `const Schema = new GraphQLSchema({
+                        query: new ${item}
+                    })
+                    
+                    export {
+                        Schema
+                    };
+
+                    `;
+            } else {
+                schemasOutput += `module.exports = new GraphQLSchema({
+                        query: new ${item}
+                    });`;
+            }
+
         } else {
-            schemasOutput += `${index} = new ${item};` + "\n\n";
+            schemasOutput += `${changeCase.pascalCase(index)} = new ${item};` + "\n\n";
         }
 
     })
+
+    console.log(resolvePackages);
 
     let outputSchema = `
         
         ${requiredSchemaImports()}
 
-        let ${schemaVariables.join(",")}
+        ${resolvePackagesImports()}
+
+        let ${schemaVariables.join(",")};
 
         ${schemasOutput}
-        
-    
         `;
 
     return outputSchema;
