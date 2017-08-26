@@ -247,7 +247,7 @@ handleObject = function (jObject, name, parent, useParent) {
 
     var resolve = ""
 
-    var output = `GraphQLObjectType1({
+    var output = `GraphQLObjectType({
         name: '${itemName}',
         fields: {
             ${fields.join(",")}
