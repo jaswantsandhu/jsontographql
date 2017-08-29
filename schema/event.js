@@ -7,12 +7,12 @@ import {
     GraphQLList
 } from 'graphql';
 
-import {Event} from "./event.js";
-import {Events} from "./events.js";
-import {Templates} from "./templates.js";
+import {Event} from "./schema/event";
+import {Events} from "./schema/events";
+import {Templates} from "./schema/templates";
 
-const Events = GraphQLObjectType({
-    name: 'Events',
+const Event = GraphQLObjectType({
+    name: 'Event',
     fields: {
         id: {
             description: 'enter description for id',
@@ -21,11 +21,7 @@ const Events = GraphQLObjectType({
         name: {
             description: 'enter description for name',
             type: new GraphQLNonNull(GraphQLString)
-        },
-        Event: {
-            description: 'enter description for Event',
-            type: new GraphQLNonNull(new GraphQLList(Event))
         }
     }
 });
-export {Events};
+export {Event};

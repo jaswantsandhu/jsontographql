@@ -1,10 +1,10 @@
 
                         import { GraphQLSchema,GraphQLNonNull,GraphQLObjectType,GraphQLInt,GraphQLString,GraphQLList, } from 'graphql';
 
-                        import { Event }  from "./event.js";import { Events }  from "./events.js";import { Templates }  from "./templates.js";
+                        import { Event }  from "./schema/event";import { Events }  from "./schema/events";import { Templates }  from "./schema/templates";
 
-                        const Templates = GraphQLObjectType({
-        name: 'Templates',
+                        const Events = GraphQLObjectType({
+        name: 'Events',
         fields: {
             id: {
                         description: 'enter description for id',
@@ -20,7 +20,7 @@
         }
     });
                         export {
-                            Templates
+                            Events
                         };
                         
                         
