@@ -9,7 +9,7 @@ const schemaJSON = {
         {
             id: 1,
             name: "VIP Event",
-            event: [
+            Event: [
                 {
                     id: 1,
                     name: "Some Slide"
@@ -21,7 +21,7 @@ const schemaJSON = {
         {
             id: 1,
             name: "Template 1",
-            event: [
+            Event: [
                 {
                     id: 1,
                     name: "Some Slide"

@@ -279,8 +279,18 @@ let CWD = "./"
 
         if (SPLITSCHEMATOFILES) {
 
-            let outputSchema = "";
-            let subSchemas = "";
+            var subSchemas = "";
+
+            _.forEach(schemas, function (item, index) {
+                var path = `${CWD}${CWD !== "./"
+                    ? ""
+                    : "/"}${index.toLowerCase()}`
+                if (index !== "Root") {
+                    if (JSMODE === "TS" || JSMODE === "ES6") {
+                        subSchemas += `import { ${index} }  from "${path}";`
+                    }
+                }
+            });
 
             _.forEach(schemas, function (item, index) {
                 var itemSchema = "";
@@ -289,11 +299,11 @@ let CWD = "./"
                     : "/"}${index.toLowerCase()}`
                 if (index !== "Root") {
                     if (JSMODE === "TS" || JSMODE === "ES6") {
-                        subSchemas += `import { ${index} }  from "${path}";`
                         itemSchema = `
-                        
                         ${requiredSchemaImports()}
-    
+
+                        ${subSchemas}
+
                         const ${index} = ${item};
                         export {
                             ${index}
@@ -301,8 +311,11 @@ let CWD = "./"
                         
                         `
                     } else {
-                        subSchemas += `const { ${index} } = require("${path}");`;
-                        itemSchema = `const ${index} = ${item};
+                        itemSchema = `
+                        ${subSchemas}
+
+                        const ${index} = ${item};
+                        
                         module.exports = {
                             ${index}
                         };`
@@ -310,7 +323,7 @@ let CWD = "./"
 
                     writeSubSchemaFiles(itemSchema, index)
                 }
-            })
+            });
 
             outputSchema = `
             ${requiredSchemaImports()}
