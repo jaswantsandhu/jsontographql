@@ -233,7 +233,7 @@ let CWD = "./"
     writeSubSchemaFiles = function (schema, name) {
         fs
             .writeFile(CWD + name.toLowerCase() + ".js", schema, function () {
-                console.log("Schema Created - " + name + ".")
+                console.log("Schema Created - " + name + " @ " + CWD + name.toLowerCase() + ".js")
             })
     }
 
@@ -279,18 +279,27 @@ let CWD = "./"
 
         if (SPLITSCHEMATOFILES) {
 
-            var subSchemas = "";
+            var pathSubSchemas = "";
 
             _.forEach(schemas, function (item, index) {
                 var path = `${CWD}${CWD !== "./"
                     ? ""
-                    : "/"}${index.toLowerCase()}`
+                    : "/"}${index.toLowerCase()}`;
+
+                var pathInner = `./${index.toLowerCase()}.js`;
+
                 if (index !== "Root") {
                     if (JSMODE === "TS" || JSMODE === "ES6") {
-                        subSchemas += `import { ${index} }  from "${path}";`
+                        pathSubSchemas += `import { ${index} }  from "${pathInner}";`
                     }
+                    else
+                        {
+                            pathSubSchemas += `import { ${index} }  from "${pathInner}";`
+                        }
                 }
             });
+
+            
 
             _.forEach(schemas, function (item, index) {
                 var itemSchema = "";
@@ -302,7 +311,7 @@ let CWD = "./"
                         itemSchema = `
                         ${requiredSchemaImports()}
 
-                        ${subSchemas}
+                        ${pathSubSchemas}
 
                         const ${index} = ${item};
                         export {
@@ -312,7 +321,7 @@ let CWD = "./"
                         `
                     } else {
                         itemSchema = `
-                        ${subSchemas}
+                        ${pathSubSchemas}
 
                         const ${index} = ${item};
                         
@@ -330,7 +339,7 @@ let CWD = "./"
 
             ${resolvePackagesImports()}
 
-            ${subSchemas}
+            ${pathSubSchemas}
 
             const Schema = new GraphQLSchema({
                 query: new ${schemas['Root']}
