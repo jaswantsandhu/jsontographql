@@ -1,7 +1,7 @@
 
                         import { GraphQLSchema,GraphQLNonNull,GraphQLObjectType,GraphQLInt,GraphQLString,GraphQLList, } from 'graphql';
 
-                        import { Event }  from "./event.js";import { Events }  from "./events.js";import { Templates }  from "./templates.js";
+                        import { Event }  from "./event.js";import { Templates }  from "./templates.js";
 
                         const Templates = GraphQLObjectType({
         name: 'Templates',

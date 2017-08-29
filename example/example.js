@@ -58,6 +58,12 @@ convertToSchema(schemaJSON, {
     splitSchemaFiles: true,
     cwd: "./schema/",
     jsMode: "TS",
+    maps: {
+        Events: {
+            type: "Event",
+            isList: true
+        }
+    },
     resolves: {
         Events: {
             resolve: `invoke({FunctionName : "getEvents"})`,
