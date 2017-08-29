@@ -7,30 +7,26 @@ import {
     GraphQLList
 } from 'graphql';
 
-import
-{
-    invoke
-}
-from './lambda';
-
-let Root,
-    Event,
+import {invoke} from './lambda';
+let Event,
     Events,
-    Event,
     Templates,
-    Event;
-
-Event = new GraphQLObjectType1({
+    Root;
+Event = new GraphQLObjectType({
     name: 'Event',
     fields: {
         id: {
             description: 'enter description for id',
             type: new GraphQLNonNull(GraphQLInt)
+        },
+        name: {
+            description: 'enter description for name',
+            type: new GraphQLNonNull(GraphQLString)
         }
     }
 });
 
-Events = new GraphQLObjectType1({
+Events = new GraphQLObjectType({
     name: 'Events',
     fields: {
         id: {
@@ -51,7 +47,7 @@ Events = new GraphQLObjectType1({
     }
 });
 
-Templates = new GraphQLObjectType1({
+Templates = new GraphQLObjectType({
     name: 'Templates',
     fields: {
         id: {
@@ -73,7 +69,7 @@ Templates = new GraphQLObjectType1({
 });
 
 const Schema = new GraphQLSchema({
-    query: new GraphQLObjectType1({
+    query: new GraphQLObjectType({
         name: 'Root',
         fields: {
             Event: {

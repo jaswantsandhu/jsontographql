@@ -23,12 +23,14 @@ const schemaJSON = {
             name: "Template 1",
             event: [
                 {
-                    id: 1
+                    id: 1,
+                    name: "Some Slide"
                 }
             ]
         }
     ]
 }
+// Output as string
 const output = convertToSchema(schemaJSON, {
     jsMode: "TS",
     resolves: {
@@ -49,4 +51,22 @@ const output = convertToSchema(schemaJSON, {
 
 fs.writeFile("./sample.js", output, function () {
     console.log("schema file created.")
+});
+
+// Create files and splits thems.
+convertToSchema(schemaJSON, {
+    splitSchemaFiles: true,
+    cwd: "./schema/",
+    jsMode: "TS",
+    resolves: {
+        Events: {
+            resolve: `invoke({FunctionName : "getEvents"})`,
+            package: "./lambda",
+            method: "invoke",
+            default: false
+        },
+        Event: null,
+        Templates: null,
+        event: null
+    }
 });
