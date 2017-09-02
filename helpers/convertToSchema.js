@@ -354,7 +354,7 @@ convertToSchema = function (JSON, options = {}) {
             ${pathSubSchemas}
 
             const Schema = new GraphQLSchema({
-                query: new ${schemas['Root']}
+                query: ${schemas['Root']}
             })
             export {
                 Schema
