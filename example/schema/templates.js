@@ -3,7 +3,7 @@
 
                         import { Event }  from "./event.js";import { Templates }  from "./templates.js";
 
-                        const Templates = GraphQLObjectType({
+                        const Templates = new GraphQLObjectType({
         name: 'Templates',
         fields: {
             id: {

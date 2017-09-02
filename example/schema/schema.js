@@ -7,7 +7,7 @@
             import { Event }  from "./event.js";import { Templates }  from "./templates.js";
 
             const Schema = new GraphQLSchema({
-                query: new GraphQLObjectType({
+                query: new new GraphQLObjectType({
         name: 'Root',
         fields: {
             Event: {

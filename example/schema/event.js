@@ -1,26 +1,22 @@
-import {
-    GraphQLSchema,
-    GraphQLNonNull,
-    GraphQLObjectType,
-    GraphQLInt,
-    GraphQLString,
-    GraphQLList
-} from 'graphql';
 
-import {Event} from "./event.js";
-import {Templates} from "./templates.js";
+                        import { GraphQLSchema,GraphQLNonNull,GraphQLObjectType,GraphQLInt,GraphQLString,GraphQLList, } from 'graphql';
 
-const Event = GraphQLObjectType({
-    name: 'Event',
-    fields: {
-        id: {
-            description: 'enter description for id',
-            type: new GraphQLNonNull(GraphQLInt)
-        },
-        name: {
-            description: 'enter description for name',
-            type: new GraphQLNonNull(GraphQLString)
+                        import { Event }  from "./event.js";import { Templates }  from "./templates.js";
+
+                        const Event = new GraphQLObjectType({
+        name: 'Event',
+        fields: {
+            id: {
+                        description: 'enter description for id',
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },name: {
+                        description: 'enter description for name',
+                        type: new GraphQLNonNull(GraphQLString)
+                    }
         }
-    }
-});
-export {Event};
+    });
+                        export {
+                            Event
+                        };
+                        
+                        

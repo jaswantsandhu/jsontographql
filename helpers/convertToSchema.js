@@ -228,7 +228,7 @@ handleObject = function (jObject, name) {
 
     var itemName = `${changeCase.pascalCase(name)}`;
     var resolve = "";
-    var output = `GraphQLObjectType({
+    var output = `new GraphQLObjectType({
         name: '${itemName}',
         fields: {
             ${fields.join(",")}

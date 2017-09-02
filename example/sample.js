@@ -3,7 +3,7 @@
             
                 import { invoke } from './lambda';
             let Event,Events,Templates,Root;
-            Event = new GraphQLObjectType({
+            Event = new new GraphQLObjectType({
         name: 'Event',
         fields: {
             id: {
@@ -16,7 +16,7 @@
         }
     });
 
-Events = new GraphQLObjectType({
+Events = new new GraphQLObjectType({
         name: 'Events',
         fields: {
             id: {
@@ -35,7 +35,7 @@ Events = new GraphQLObjectType({
         }
     });
 
-Templates = new GraphQLObjectType({
+Templates = new new GraphQLObjectType({
         name: 'Templates',
         fields: {
             id: {
@@ -55,7 +55,7 @@ Templates = new GraphQLObjectType({
     });
 
 const Schema = new GraphQLSchema({
-                                query: new GraphQLObjectType({
+                                query: new new GraphQLObjectType({
         name: 'Root',
         fields: {
             Event: {
