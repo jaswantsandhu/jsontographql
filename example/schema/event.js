@@ -1,14 +1,14 @@
-import {
+const {
     GraphQLSchema,
     GraphQLNonNull,
     GraphQLObjectType,
     GraphQLInt,
     GraphQLString,
     GraphQLList
-} from 'graphql';
+} = require('graphql');
 
-import {Event} from "./event.js";
-import {Templates} from "./templates.js";
+const {Event} = require("./event.js");
+const {Templates} = require("./templates.js");
 
 const Event = new GraphQLObjectType({
     name: 'Event',
@@ -23,4 +23,7 @@ const Event = new GraphQLObjectType({
         }
     }
 });
-export {Event};
+
+module.exports = {
+    Event
+};

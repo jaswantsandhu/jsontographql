@@ -30,34 +30,11 @@ const schemaJSON = {
         }
     ]
 }
-// Output as string
-const output = convertToSchema(schemaJSON, {
-    jsMode: "TS",
-    resolves: {
-        Events: {
-            resolve: `invoke({FunctionName : "getEvents"})`,
-            package: "./lambda",
-            method: "invoke",
-            default: false
-        },
-        Event: {
-            resolve: `invoke({FunctionName : "getEvent"})`,
-            package: "./lambda",
-            method: "invoke",
-            default: false
-        }
-    }
-});
-
-fs.writeFile("./sample.js", output, function () {
-    console.log("schema file created.")
-});
 
 // Create files and splits thems.
 convertToSchema(schemaJSON, {
     splitSchemaFiles: true,
     cwd: "./schema/",
-    jsMode: "TS",
     maps: {
         Events: {
             type: "Event",

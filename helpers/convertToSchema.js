@@ -292,11 +292,10 @@ convertToSchema = function (JSON, options = {}) {
 
         _.forEach(schemas, function (item, index) {
 
-            if(MAPS[index])
-                {
-                    delete schemas[index];
-                    return;
-                }
+            if (MAPS[index]) {
+                delete schemas[index];
+                return;
+            }
 
             var path = `${CWD}${CWD !== "./"
                 ? ""
@@ -333,6 +332,9 @@ convertToSchema = function (JSON, options = {}) {
                         `
                 } else {
                     itemSchema = `
+
+                        ${requiredSchemaImports()}
+
                         ${pathSubSchemas}
 
                         const ${index} = ${item};

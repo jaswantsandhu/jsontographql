@@ -1,16 +1,16 @@
-import {
+const {
     GraphQLSchema,
     GraphQLNonNull,
     GraphQLObjectType,
     GraphQLInt,
     GraphQLString,
     GraphQLList
-} from 'graphql';
+} = require('graphql');
 
-import {invoke} from './lambda';
+const {invoke} = require('./lambda');
 
-import {Event} from "./event.js";
-import {Templates} from "./templates.js";
+const {Event} = require("./event.js");
+const {Templates} = require("./templates.js");
 
 const Schema = new GraphQLSchema({
     query: new GraphQLObjectType({
