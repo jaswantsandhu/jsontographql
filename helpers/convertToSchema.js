@@ -308,7 +308,7 @@ convertToSchema = function (JSON, options = {}) {
                 if (JSMODE === "TS" || JSMODE === "ES6") {
                     pathSubSchemas += `import { ${index} }  from "${pathInner}";`
                 } else {
-                    pathSubSchemas += `import { ${index} }  from "${pathInner}";`
+                    pathSubSchemas += `const { ${index} }  from require("${pathInner}");`
                 }
             }
         });
